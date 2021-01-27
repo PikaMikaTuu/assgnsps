@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drag & Drop Primer</title>
+  <style type="text/css">
+    .container {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 20px;
+    }
+    .drop-targets {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      align-items: center;
+      margin: 20px 0;
+    }
+    .box {
+      height: 150px;
+      width: 150px;
+      border: solid 3px #ccc;
+      margin: 10px;
+
+      /* align items in the box */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .hide {
+      display: none;
+    }
+    .drag-over {
+      border: dashed 3px pink;
+    }
+    img {
+      width: 100px;
+      height: 150px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Drag and Drop</h1>
+    <div class="drop-targets">
+      <div class="box">
+        <img class="item" id="cat-img" draggable="true" src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fdreamicus.com%2Fdata%2Fcat%2Fcat-02.jpg&f=1&nofb=1" alt="">
+      </div>
+      <div class="box"></div>
+      <div class="box">
+        <img class="item" id="dog-img" draggable="true" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.herinterest.com%2Fwp-content%2Fuploads%2F2017%2F12%2FChihuahua-Puppies-4.jpg&f=1&nofb=1" alt="">
+      </div>
+      <div class="box"></div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    const items = document.querySelectorAll('.item');
+    items.forEach(item => {
+      item.addEventListener('dragstart', (e) => {
+        console.log('drag start...');
+        e.dataTransfer.setData('text/plain', e.target.id);
+        setTimeout(() => {
+          e.target.classList.add('hide');
+        }, 0);
+      });
+    });
+
+    const boxes = document.querySelectorAll('.box');
+    boxes.forEach(box => {
+      box.addEventListener('dragenter', dragEnter);
+      box.addEventListener('dragover', dragOver);
+      box.addEventListener('dragleave', dragLeave);
+      box.addEventListener('drop', drop);
+    });
+
+    function dragEnter(e) {
+      e.preventDefault();
+      e.target.classList.add('drag-over');
+    }
+    function dragOver(e) {
+      e.preventDefault();
+      e.target.classList.add('drag-over');
+    }
+    function dragLeave(e) {
+      e.target.classList.remove('drag-over');
+    }
+    function drop(e) {
+      e.preventDefault();
+      e.target.classList.remove('drag-over');
+      const id = e.dataTransfer.getData('text/plain');
+      const draggable = document.getElementById(id);
+      e.target.appendChild(draggable);
+      draggable.classList.remove('hide');
+      console.log('dropped image');
+    }
+  </script>
+</body>
+</html>
